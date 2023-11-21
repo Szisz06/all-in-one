@@ -8,5 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Auto extends Model
 {
     use HasFactory;
-    
+    protected $primaryKey = 'auto_id'; 
+
+    protected $fillable = [ 
+
+        'name', 
+        'year',
+        'price',
+        'fuel_type'
+    ]; 
 }
