@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Tests\Helpers\SimpleHasher;
+use Tymon\JWTAuth\JWTGuard;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -22,5 +26,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        // add custom guard provider
+        Auth::provider('user', function (Application $app, array $config) {
+            return new UserProvider(new SimpleHasher(), $config['model']);
+        });
     }
 }
