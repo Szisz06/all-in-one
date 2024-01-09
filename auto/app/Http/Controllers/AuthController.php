@@ -24,19 +24,17 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function login(Request $request)
     {
-        $credentials = request(['email', 'password']);
-
-        if (request('role') == 'employee') {
-            if (!$token = auth('employee')->attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized'], 401);
-            }
-        } elseif (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        $credentials = $request->only('email', 'password');
+ 
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized'
+            ], 401);
         }
-
-        return $this->respondWithToken($token); # If all credentials are correct - we are going to generate a new access token and send it back on response
+        return $this->respondWithToken($token);
     }
 
     /**
